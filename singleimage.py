@@ -1,6 +1,7 @@
 import os
 from moviepy.editor import VideoFileClip, ImageClip, CompositeVideoClip, AudioFileClip
 from moviepy.video.compositing.concatenate import concatenate_videoclips
+from moviepy.audio.fx.all import audio_loop
 
 audiopath = "audio_files"
 single_image_background_folder = 'background/single image background'
@@ -13,7 +14,7 @@ def singleimg(image_filename, index):
     image_path = os.path.join(meme_folder, image_filename)
     output_path = os.path.join(output_folder, f"{index}.mp4")  # Output video path
 
-    target_duration = 30  # seconds
+    target_duration = 10# seconds
 
     video_duration = VideoFileClip(video_path).duration
 
@@ -41,8 +42,17 @@ def singleimg(image_filename, index):
     # Create a composite clip with both video and image
     composite_clip = CompositeVideoClip([video_clip, image_clip.set_duration(target_duration)])
 
-    # Load the audio clip
+    
+
+    # Trim or loop the audio to match the target duration
     audio_clip = AudioFileClip(audio_path)
+    if audio_clip.duration > target_duration:
+        audio_clip = audio_clip.subclip(0, target_duration)
+    else:
+        audio_clip = audio_loop(audio_clip, duration=target_duration)
+
+    # Set audio for the composite clip
+    final_clip = composite_clip.set_audio(audio_clip)
 
     # Set audio for the composite clip
     final_clip = composite_clip.set_audio(audio_clip)
@@ -51,11 +61,10 @@ def singleimg(image_filename, index):
     print(f"VIDEO CREATION SUCCESSFUL: {output_path}")
 def singleproc():
     if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-    
+        os.makedirs(output_folder)    
     meme_images = os.listdir(meme_folder)
     for index, image_filename in enumerate(meme_images, start=1):
-        if image_filename.lower().endswith('.jpg') or image_filename.lower().endswith('.png'):
+        if image_filename.lower().endswith('.jpg') or image_filename.lower().endswith('.png') or image_filename.lower().endswith('.jpeg'):
             singleimg(image_filename, index)
 
 

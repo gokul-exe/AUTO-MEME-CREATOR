@@ -13,7 +13,7 @@ imagevideo_folder = 'imagevideo'
 output_folder = 'results/collage_results'
 
 def vdeoproc():
-    bottom_file = '1.mp4'  # Specify the bottom video filename
+    bottom_file = r'C:\Users\gokul\OneDrive\Desktop\MEME-CREATOR-V1\collagevideo\meme1.mp4'  # Specify the bottom video filename
 
     # Load the bottom video from the "video" folder
     bottom_path = os.path.join(video_folder, bottom_file)
@@ -21,7 +21,7 @@ def vdeoproc():
     bottom_clip = bottom_clip.resize(height=960)
 
     # Iterate through the top images/videos in the "imagevideo" folder
-    top_files = sorted([f for f in os.listdir(imagevideo_folder) if f.endswith('.mp4') or f.endswith('.jpg') or f.endswith('.png')])
+    top_files = sorted([f for f in os.listdir(imagevideo_folder) if f.endswith('.mp4') or f.endswith('.jpg') or f.endswith('.png')or f.endswith('.jpeg')])
 
     for index, top_file in enumerate(top_files):
         top_path = os.path.join(imagevideo_folder, top_file)
