@@ -1,20 +1,21 @@
 import os
 from moviepy.editor import VideoFileClip, ImageClip, CompositeVideoClip, AudioFileClip
 from moviepy.video.compositing.concatenate import concatenate_videoclips
+from moviepy.audio.fx.all import audio_loop
 
 audiopath = "audio_files"
-single_image_background_folder = 'background/double image background'
+double_image_background_folder = 'background/double image background'
 meme_folder = 'memes'
 output_folder = 'results/double_image_results'  # Change the output folder path
 
 def doubleimg(image_filenames, index):
     audio_path = os.path.join(audiopath, "music1.mp3")
-    video_path = os.path.join(single_image_background_folder, "background.mp4")
+    video_path = os.path.join(double_image_background_folder, "background.mp4")
     image_path1 = os.path.join(meme_folder, image_filenames[0])
     image_path2 = os.path.join(meme_folder, image_filenames[1])
     output_path = os.path.join(output_folder, f"{index}.mp4")  # Output video path
 
-    target_duration = 30  # seconds
+    target_duration = 15 # seconds
 
     video_duration = VideoFileClip(video_path).duration
 
@@ -47,14 +48,19 @@ def doubleimg(image_filenames, index):
     composite_clip = CompositeVideoClip([video_clip, image_clip1.set_duration(target_duration)])
     composite_clip = CompositeVideoClip([composite_clip, image_clip2.set_duration(target_duration)])
 
-    # Load the audio clip
+    # Trim or loop the audio to match the target duration
     audio_clip = AudioFileClip(audio_path)
+    if audio_clip.duration > target_duration:
+        audio_clip = audio_clip.subclip(0, target_duration)
+    else:
+        audio_clip = audio_loop(audio_clip, duration=target_duration)
 
     # Set audio for the composite clip
     final_clip = composite_clip.set_audio(audio_clip)
 
     final_clip.write_videofile(output_path, codec='libx264')
     print(f"VIDEO CREATION SUCCESSFUL: {output_path}")
+
 def doublproc():
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
@@ -69,4 +75,3 @@ def doublproc():
 
 if __name__ == "__main__":
     pass
-    

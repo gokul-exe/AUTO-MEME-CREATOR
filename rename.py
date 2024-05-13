@@ -1,11 +1,13 @@
 import os
+from resize import resize_images
 
 def rename_files():
     folder_path = "memes"
     if not os.path.exists(folder_path) or not os.path.isdir(folder_path):
         print("Invalid folder path.")
         return
-
+    
+    resize_images()
     files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
     total_files = len(files)
 
